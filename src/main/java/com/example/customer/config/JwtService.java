@@ -25,7 +25,7 @@ public class JwtService {
                 .name(body.get("name", String.class))
                 .role(body.get("role", String.class))
                 .build();
-        if(info.getRole().equals("OWNER"))
+        if(info.getRole().equals("CUSTOMER"))
             throw new IllegalArgumentException("403");
         return info;
     }

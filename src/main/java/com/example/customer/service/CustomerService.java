@@ -26,7 +26,7 @@ public class CustomerService {
     public SignupResponse checkSignup(TokenInfo tokenInfo) { //저쪽에서 토큰을 주니까 이걸 까서 사용할거임.
         Customer customer = getByToken(tokenInfo);
         return SignupResponse.builder()
-                .tokenInfo(tokenInfo)
+                .customer(customer)
                 .redirect(customer.getAddress() == null? "/signup":"/main") // 주소가 null이면 signup으로 보내고 아니면 메인으로 보낸다.
                 .build();
     }
@@ -35,10 +35,15 @@ public class CustomerService {
         Customer customer = getByToken(tokenInfo);
         customer.setAddress(request.getAddress());  //업데이트 되도록. address만 따로 set을 만들어줌. 전체가 set되지 않도록.
         return SignupResponse.builder()
-                .tokenInfo(tokenInfo)
+                .customer(customer)
                 .redirect("/main") // 주소가 null이면 signup으로 보내고 아니면 메인으로 보낸다.
                 .build();
 
+    }
+
+    public Customer getMe(TokenInfo tokenInfo) {
+        return customerRepository.findById(tokenInfo.getId())
+                .orElseThrow(() -> new IllegalArgumentException("USER NOT FOUND"));
     }
 
 
